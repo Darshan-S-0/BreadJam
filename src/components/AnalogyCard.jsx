@@ -1,22 +1,28 @@
-import { ANALOGIES } from '../constants'
-
 /**
- * AnalogyCard — shows a rotating analogy keyed by `analogyIndex`.
+ * AnalogyCard — displays AI-generated analogy.
+ * Animates in fresh on each new `analogy` string.
  *
- * @param {number} analogyIndex - index into ANALOGIES pool (cycled by parent)
+ * @param {string}  analogy        - AI-generated analogy text
+ * @param {boolean} analogyLoading - true while fetching a new analogy
  */
-export default function AnalogyCard({ analogyIndex }) {
-  const text = ANALOGIES[analogyIndex % ANALOGIES.length]
+import LoadingCard from './LoadingCard'
+
+export default function AnalogyCard({ analogy, analogyLoading }) {
+  if (analogyLoading) {
+    return <LoadingCard title="Analogy" emoji="🎭" />
+  }
 
   return (
     <div className="result-card mb-6" style={{ animationDelay: '0.15s' }}>
-      {/* Dark title bar */}
       <div className="card-title-bar">
         <span aria-hidden="true">🎭</span> Analogy
       </div>
 
-      {/* Content — re-mounts on index change for a fresh fade-in */}
-      <div className="px-4 pb-4 relative" style={{ zIndex: 1 }} key={analogyIndex}>
+      <div
+        className="px-4 pb-4 relative"
+        style={{ zIndex: 1 }}
+        key={analogy} /* re-triggers fade animation on new analogy */
+      >
         <p
           className="margin-line font-patrick leading-relaxed"
           style={{
@@ -27,7 +33,7 @@ export default function AnalogyCard({ analogyIndex }) {
             animation: 'fadeSlideUp 0.4s ease forwards',
           }}
         >
-          💬 {text}
+          💬 {analogy}
         </p>
       </div>
     </div>

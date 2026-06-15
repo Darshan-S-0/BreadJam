@@ -1,11 +1,14 @@
 /**
- * FooterActions — "Try Another Analogy" and "New Quiz" buttons shown below the quiz card.
+ * FooterActions — "Try Another Analogy" and "New Quiz" buttons.
+ * Shows spinner on whichever button is loading.
  * Stacked on mobile, side-by-side on sm+ screens.
  *
- * @param {Function} onNewAnalogy - callback to cycle the analogy
- * @param {Function} onNewQuiz    - callback to reset the quiz
+ * @param {Function} onNewAnalogy    - callback to fetch a new analogy
+ * @param {Function} onNewQuiz       - callback to fetch a new quiz
+ * @param {boolean}  analogyLoading  - disables analogy button while loading
+ * @param {boolean}  quizLoading     - disables quiz button while loading
  */
-export default function FooterActions({ onNewAnalogy, onNewQuiz }) {
+export default function FooterActions({ onNewAnalogy, onNewQuiz, analogyLoading, quizLoading }) {
   return (
     <div
       className="flex flex-col sm:flex-row gap-3 justify-center mb-10 mt-2"
@@ -14,19 +17,21 @@ export default function FooterActions({ onNewAnalogy, onNewQuiz }) {
       <button
         id="new-analogy-btn"
         className="sketch-btn"
-        style={{ fontSize: '1rem', padding: '10px 24px' }}
+        style={{ fontSize: '1rem', padding: '10px 24px', opacity: analogyLoading ? 0.65 : 1 }}
         onClick={onNewAnalogy}
+        disabled={analogyLoading}
       >
-        🔄 Try Another Analogy
+        {analogyLoading ? '⏳ Fetching...' : '🔄 Try Another Analogy'}
       </button>
 
       <button
         id="new-quiz-btn"
         className="sketch-btn"
-        style={{ fontSize: '1rem', padding: '10px 24px' }}
+        style={{ fontSize: '1rem', padding: '10px 24px', opacity: quizLoading ? 0.65 : 1 }}
         onClick={onNewQuiz}
+        disabled={quizLoading}
       >
-        🎲 New Quiz
+        {quizLoading ? '⏳ Fetching...' : '🎲 New Quiz'}
       </button>
     </div>
   )

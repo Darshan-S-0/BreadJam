@@ -1,18 +1,14 @@
 import { useState } from 'react'
-import { QUIZ_DATA } from '../constants'
+import LoadingCard from './LoadingCard'
 
 /**
  * Single quiz question with A/B/C/D clickable options.
- * Manages its own selected-answer state.
- *
- * @param {{ id, question, options, correct }} q   - question object
- * @param {number}                             idx  - 0-based question index
  */
 function QuizQuestion({ q, idx }) {
   const [selected, setSelected] = useState(null)
 
   const handleSelect = (optIdx) => {
-    if (selected !== null) return // locked after first answer
+    if (selected !== null) return
     setSelected(optIdx)
   }
 
@@ -21,7 +17,6 @@ function QuizQuestion({ q, idx }) {
       className="mb-6"
       style={{ animation: `fadeSlideUp 0.5s ease ${idx * 0.15}s both` }}
     >
-      {/* Question text */}
       <p
         className="margin-line font-caveat font-semibold mb-3"
         style={{ fontSize: '1.15rem', color: '#1a1a2e' }}
@@ -30,10 +25,8 @@ function QuizQuestion({ q, idx }) {
         {q.question}
       </p>
 
-      {/* Options */}
       <div className="flex flex-col gap-2 pl-4">
         {q.options.map((opt, oi) => {
-          // Determine CSS class for feedback state
           let cls = 'quiz-opt'
           if (selected !== null) {
             if (oi === q.correct) cls += ' correct'
@@ -55,7 +48,6 @@ function QuizQuestion({ q, idx }) {
                 {String.fromCharCode(65 + oi)}.
               </span>
               {opt}
-              {/* Feedback emoji — right-aligned */}
               {selected !== null && oi === q.correct && (
                 <span className="float-right" aria-label="Correct">✅</span>
               )}
@@ -71,24 +63,26 @@ function QuizQuestion({ q, idx }) {
 }
 
 /**
- * QuizCard — renders all quiz questions.
- * Accepts a `quizKey` prop so the parent can reset all question states
- * by incrementing the key (React re-mounts child components).
+ * QuizCard — renders dynamic quiz questions from Grok API.
  *
- * @param {number} quizKey - increment to reset quiz state
+ * @param {{ question: string, options: string[], correct: number }[]} quizData - AI-generated questions
+ * @param {boolean} quizLoading - true while fetching a new quiz
+ * @param {number}  quizKey     - increment to reset per-question selected state
  */
-export default function QuizCard({ quizKey }) {
+export default function QuizCard({ quizData, quizLoading, quizKey }) {
+  if (quizLoading) {
+    return <LoadingCard title="Quick Quiz" emoji="🧠" />
+  }
+
   return (
     <div className="result-card mb-6" style={{ animationDelay: '0.3s' }}>
-      {/* Dark title bar */}
       <div className="card-title-bar">
         <span aria-hidden="true">🧠</span> Quick Quiz
       </div>
 
-      {/* Questions — keyed so they re-mount on quizKey change */}
       <div className="px-4 pb-4 relative" style={{ zIndex: 1 }} key={quizKey}>
-        {QUIZ_DATA.map((q, i) => (
-          <QuizQuestion key={`${quizKey}-${q.id}`} q={q} idx={i} />
+        {quizData.map((q, i) => (
+          <QuizQuestion key={`${quizKey}-${i}`} q={q} idx={i} />
         ))}
       </div>
     </div>
