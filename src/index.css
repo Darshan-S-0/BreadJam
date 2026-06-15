@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Google Fonts are loaded via index.html ── */
+
+/* ── Notebook ruled-paper background ── */
+body {
+  background-color: #fdf6e3;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    #c8d8e8 27px,
+    #c8d8e8 28px
+  );
+  min-height: 100vh;
+  font-family: 'Patrick Hand', cursive;
+}
+
+/* ── SVG sketchy displacement filter applied globally ── */
+.sketch-filter {
+  filter: url(#sketchy);
+}
+
+/* ── Paper card: notebook-ruled inner background ── */
+.paper-card {
+  background: rgba(253, 246, 227, 0.97);
+  position: relative;
+}
+.paper-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    rgba(200, 216, 232, 0.45) 27px,
+    rgba(200, 216, 232, 0.45) 28px
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ── Sketch buttons ── */
+.sketch-btn {
+  @apply relative inline-flex items-center gap-2 font-caveat font-bold border-2 border-ink bg-paper cursor-pointer rounded-sm transition-all duration-150;
+  box-shadow: 3px 3px 0 #1a1a2e;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  padding: 8px 18px;
+}
+.sketch-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 #1a1a2e;
+}
+.sketch-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #1a1a2e;
+}
+.sketch-btn-active {
+  background-color: #ffe066 !important;
+  box-shadow: 4px 4px 0 #1a1a2e;
+}
+
+/* ── Generate button ── */
+.generate-btn {
+  @apply font-caveat font-bold border-[3px] border-ink bg-ink text-highlight cursor-pointer rounded-sm relative overflow-hidden transition-all duration-150;
+  font-size: 1.6rem;
+  letter-spacing: 0.04em;
+  padding: 14px 40px;
+  box-shadow: 5px 5px 0 #ffe066;
+}
+.generate-btn:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 #ffe066;
+}
+.generate-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #ffe066;
+}
+.generate-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+/* ── Upload button ── */
+.upload-btn {
+  @apply inline-flex items-center gap-2 font-caveat font-bold border-[2.5px] border-dashed border-ink bg-transparent cursor-pointer rounded-sm transition-all duration-150;
+  font-size: 1.1rem;
+  color: #1a1a2e;
+  padding: 10px 20px;
+}
+.upload-btn:hover {
+  background-color: #ffe066;
+  border-style: solid;
+}
+
+/* ── Notes textarea ── */
+.sketch-textarea {
+  @apply font-patrick w-full border-[2.5px] border-ink rounded-sm bg-transparent outline-none resize-y text-ink;
+  font-size: 1rem;
+  padding: 12px;
+  box-shadow: 3px 3px 0 #c8d8e8;
+  transition: box-shadow 0.15s;
+}
+.sketch-textarea:focus {
+  box-shadow: 4px 4px 0 #1a1a2e;
+}
+
+/* ── Result card ── */
+.result-card {
+  @apply overflow-hidden rounded-sm;
+  border: 2.5px solid #1a1a2e;
+  box-shadow: 4px 4px 0 #1a1a2e;
+  background: #fdf6e3;
+  animation: fadeSlideUp 0.5s ease forwards;
+}
+.card-title-bar {
+  @apply flex items-center gap-2 font-caveat font-bold;
+  border-bottom: 2px solid #1a1a2e;
+  padding: 10px 16px;
+  background: #1a1a2e;
+  color: #ffe066;
+  font-size: 1.4rem;
+}
+
+/* ── Red margin line ── */
+.margin-line {
+  border-left: 3px solid #e57373;
+  padding-left: 16px;
+}
+
+/* ── Quiz options ── */
+.quiz-opt {
+  @apply w-full text-left font-caveat font-semibold border-2 border-ink bg-paper cursor-pointer rounded-sm transition-all duration-200 disabled:cursor-not-allowed;
+  font-size: 1.1rem;
+  padding: 8px 14px;
+  box-shadow: 2px 2px 0 #1a1a2e;
+}
+.quiz-opt:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 #1a1a2e;
+  background-color: #fffde7;
+}
+.quiz-opt.correct {
+  background-color: #c8e6c9 !important;
+  border-color: #2e7d32;
+  box-shadow: 2px 2px 0 #2e7d32;
+  color: #1b5e20;
+}
+.quiz-opt.incorrect {
+  background-color: #ffcdd2 !important;
+  border-color: #c62828;
+  box-shadow: 2px 2px 0 #c62828;
+  color: #7f0000;
+}
+
+/* ── Keyframes ── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pop {
+  0%   { transform: scale(0.8); opacity: 0; }
+  60%  { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.animate-pop { animation: pop 0.35s ease forwards; }
